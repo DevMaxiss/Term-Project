@@ -26,8 +26,8 @@ text-align: center;
 
 div.header{
 text-align: center;
-border:5px black solid;
-background-color:white; /*Different Colour? Maybe an image for banner?*/
+border:5px #000000 solid;
+background-color:#ffffff; /*Different Colour? Maybe an image for banner?*/
 background-size:100%;
 
 
@@ -52,18 +52,19 @@ button.reset{
 
 <div class = "canvasContainer"> <!--Where the game will be located.-->
 
-<canvas id = "pingPong"class = "environment" width = 300 height = 575>
+<canvas id = "pingPong"class = "environment" width = 1000 height = 700>
 Canvas not supported on this browser.
 </canvas>
 <br>
-<button type = "button">Reset</button>
+<button type = "button">Reset Game</button>
+<button type = "button">Reset Scores</button>
 
 </div>
 
 </body>
 
 <script> 
-/*Javascript Stuff - Will need to become its seperate document in the future.*/
+/*Javascript Stuff - Will need to become its separate document in the future.*/
 var canvas = document.getElementById("pingPong");
 var ctx = canvas.getContext("2d");
 
