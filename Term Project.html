@@ -56,8 +56,8 @@ button.reset{
 Canvas not supported on this browser.
 </canvas>
 <br>
-
 <button type = "button">Reset Game</button>
+<button type = "button">Reset Scores</button>
 
 </div>
 
@@ -67,6 +67,44 @@ Canvas not supported on this browser.
 /*Javascript Stuff - Will need to become its separate document in the future.*/
 var canvas = document.getElementById("pingPong");
 var ctx = canvas.getContext("2d");
+var x = 0;
+var y = 225;
+var speed = 12;
+var playerImg = document.createElement("img");
+playerImg.src = "test1.jpg";
+
+
+
+ctx.drawImage(playerImg,x,y,150,200);
+ctx.beginPath();
+ctx.moveTo(500,0);
+ctx.lineTo(500,700);
+ctx.stroke();
+ctx.closePath();
+
+
+ctx.beginPath();
+ctx.moveTo(0,350);
+ctx.lineTo(1000,350);
+ctx.stroke();
+ctx.closePath();
+
+window.addEventListener("keydown", function(key){ //movement.
+var code = key.keyCode;
+if(code == 83){
+	y+=speed;
+	ctx.clearRect(x,y,canvas.width,canvas.height);
+	ctx.drawImage(playerImg,x,y,150,200);;
+}
+
+else if (code == 87){
+	y-=speed;
+	ctx.clearRect(x,y,canvas.width,canvas.height);
+	ctx.drawImage(playerImg,x,y,150,200);;
+}
+
+});
+
 
 </script>
 
