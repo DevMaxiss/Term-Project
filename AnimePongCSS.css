@@ -1,0 +1,28 @@
+body.background{
+background-attachment: fixed;
+background-image: url("LLBG2.jpg");
+background-repeat: no-repeat;
+background-size: 100%;
+}
+
+canvas.environment{
+border: 3px black solid;
+background-color: #ffffff;  
+}
+
+div.canvasContainer{
+text-align: center;
+}
+
+div.header{
+text-align: center;
+border:5px #000000 solid;
+background-color:#ffffff; /*Different Colour? Maybe an image for banner?*/
+background-size:100%;
+
+
+}
+
+button.reset{
+/*Possible button style*/
+}
