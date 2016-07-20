@@ -58,6 +58,7 @@ Canvas not supported on this browser.
 
 </div>
 
+<script src="ball.js"></script>
 <script>
 
 var canvas = document.getElementById("pingPong");
@@ -122,7 +123,7 @@ document.body.addEventListener("keyup", function(key){ //movement.
         var loopTimer = false;
         
         var ball = {
-            position: {x: width/2, y: 100},
+            position: {x: width/2, y: height/2},
             velocity: {x: 5, y: 0},
             mass: 0, //kg
             radius: 15, // 1px = 1cm
@@ -137,7 +138,7 @@ document.body.addEventListener("keyup", function(key){ //movement.
         }
         
         var loop = function() {
-        
+            
             // Integrate to get velocity
             //ball.velocity.x += ax*frameRate;
             //ball.velocity.y += ay*frameRate;
@@ -159,17 +160,24 @@ document.body.addEventListener("keyup", function(key){ //movement.
             ball.velocity.x *= ball.restitution;
             ball.position.x = width - ball.radius;
         }
-        if (ball.position.x < ball.radius) {        //LEFT
-            console.log(ball.position.x);
+        if ((ball.position.x < ball.radius) || (ball.position.x < imgW+ball.radius)&& (ball.position.y > y && ball.position.y < y+imgH)) {        //LEFT
             ball.velocity.x *= ball.restitution;
-            ball.position.x = ball.radius;
+            if ((ball.position.x < imgW+ball.radius)&& (ball.position.y > y && ball.position.y < y+imgH)) {
+                ball.position.x = imgW+ball.radius;
+            }
+            else {
+                ball.position.x = ball.radius;
+            }
+            
         }
         
         // Draw the ball
         //ctx.clearRect(ball.position.x, ball.position.y,ball.radius,ball.radius);
         //ctx.clearRect(imgW,0,width-imgW,height);
         ctx.clearRect(0,0,width,height);
+        ctx.fillRect(x,y,imgW+1,imgH-1);
         ctx.drawImage(img,x,y,imgW,imgH);
+        ctx.fillRect(x2,y2,imgW-1,imgH);
         ctx.drawImage(img2,x2,y2,imgW,imgH);
             
         ctx.save();
