@@ -156,9 +156,15 @@ document.body.addEventListener("keyup", function(key){ //movement.
             ball.velocity.y *= ball.restitution;
             ball.position.y = ball.radius;
         }
-        if (ball.position.x > width - ball.radius) {        //RIGHT
+        if ((ball.position.x > width - ball.radius) || (ball.position.x > width-imgW-ball.radius)&& (ball.position.y > y2 && ball.position.y < y2+imgH)) {        //RIGHT
             ball.velocity.x *= ball.restitution;
-            ball.position.x = width - ball.radius;
+            //ball.position.x = width - ball.radius;
+            if ((ball.position.x > width-imgW-ball.radius)&& (ball.position.y > y2 && ball.position.y < y2+imgH)) {
+                ball.position.x = width - imgW-ball.radius;
+            }
+            else {
+                ball.position.x = width - ball.radius;
+            }
         }
         if ((ball.position.x < ball.radius) || (ball.position.x < imgW+ball.radius)&& (ball.position.y > y && ball.position.y < y+imgH)) {        //LEFT
             ball.velocity.x *= ball.restitution;
