@@ -58,7 +58,7 @@ Canvas not supported on this browser.
 
 </div>
 
-<script src="ball.js"></script>
+
 <script>
 
 var canvas = document.getElementById("pingPong");
@@ -126,7 +126,7 @@ document.body.addEventListener("keyup", function(key){ //movement.
             position: {x: width/2, y: height/2},
             velocity: {x: 5, y: 0},
             mass: 0, //kg
-            radius: 15, // 1px = 1cm
+            radius: 10, // 1px = 1cm
             restitution: -1
             };
         var setup = function() {
@@ -156,17 +156,23 @@ document.body.addEventListener("keyup", function(key){ //movement.
             ball.velocity.y *= ball.restitution;
             ball.position.y = ball.radius;
         }
-        if ((ball.position.x > width - ball.radius) || (ball.position.x > width-imgW-ball.radius)&& (ball.position.y > y2 && ball.position.y < y2+imgH)) {        //RIGHT
-            ball.velocity.x *= ball.restitution;
-            //ball.position.x = width - ball.radius;
+
+		
+		
+		if ((ball.position.x  > width-ball.radius) || (ball.position.x > width-imgW-ball.radius)&& (ball.position.y > y2 && ball.position.y < y2+imgH)) {//RIGHT-BOUNCE
+			ball.velocity.x *= ball.restitution;
             if ((ball.position.x > width-imgW-ball.radius)&& (ball.position.y > y2 && ball.position.y < y2+imgH)) {
-                ball.position.x = width - imgW-ball.radius;
+				console.log("boing")
+                ball.position.x = width-imgW-ball.radius;
             }
             else {
-                ball.position.x = width - ball.radius;
+                ball.position.x = width-ball.radius;
             }
+            	
         }
-        if ((ball.position.x < ball.radius) || (ball.position.x < imgW+ball.radius)&& (ball.position.y > y && ball.position.y < y+imgH)) {        //LEFT
+		
+		
+        if ((ball.position.x < ball.radius) || (ball.position.x < imgW+ball.radius)&& (ball.position.y > y && ball.position.y < y+imgH)) {//LEFT-BOUNCE
             ball.velocity.x *= ball.restitution;
             if ((ball.position.x < imgW+ball.radius)&& (ball.position.y > y && ball.position.y < y+imgH)) {
                 ball.position.x = imgW+ball.radius;
@@ -181,10 +187,10 @@ document.body.addEventListener("keyup", function(key){ //movement.
         //ctx.clearRect(ball.position.x, ball.position.y,ball.radius,ball.radius);
         //ctx.clearRect(imgW,0,width-imgW,height);
         ctx.clearRect(0,0,width,height);
-        ctx.fillRect(x,y,imgW+1,imgH-1);
-        ctx.drawImage(img,x,y,imgW,imgH);
-        ctx.fillRect(x2,y2,imgW-1,imgH);
-        ctx.drawImage(img2,x2,y2,imgW,imgH);
+        ctx.fillRect(x,y,imgW+1,imgH-1); //Player 1 Paddle
+        ctx.drawImage(img,x,y,imgW,imgH); // Player 1 Icon
+        ctx.fillRect(x2-1,y2,imgW-1,imgH-1); // Player 2 Paddle
+        ctx.drawImage(img2,x2,y2,imgW,imgH); //Player 2 Icon
             
         ctx.save();
 
