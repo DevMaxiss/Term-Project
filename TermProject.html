@@ -58,7 +58,6 @@ Canvas not supported on this browser.
 
 </div>
 
-
 <script>
 
 var canvas = document.getElementById("pingPong");
@@ -86,7 +85,6 @@ function moveSet(){
 		ctx.clearRect(x,y-speed,imgW,canvas.height);
 		y-=speed;
 		ctx.drawImage(img,x,y,imgW,imgH);
-
 	}
 	if (keys[83] && y <= canvas.height-imgH) {//down
 		ctx.clearRect(x,y-speed,imgW,canvas.height);
@@ -115,6 +113,77 @@ document.body.addEventListener("keyup", function(key){ //movement.
 	keys[key.keyCode] = false;	
 	moveSet();
 });
+    
+        var width = 1000;
+        var height = 700;
+        var canvas = ctx = false;
+        var frameRate = 1/40; // Seconds
+        var frameDelay = frameRate * 1000; // ms
+        var loopTimer = false;
+        
+        var ball = {
+            position: {x: width/2, y: 100},
+            velocity: {x: 5, y: 0},
+            mass: 0, //kg
+            radius: 15, // 1px = 1cm
+            restitution: -1
+            };
+        var setup = function() {
+          canvas = document.getElementById("pingPong");
+          ctx = canvas.getContext("2d");
+          
+          ctx.fillstyle = "purple";
+          loopTimer = setInterval(loop,frameDelay);
+        }
+        
+        var loop = function() {
+        
+            // Integrate to get velocity
+            //ball.velocity.x += ax*frameRate;
+            //ball.velocity.y += ay*frameRate;
+
+            // Integrate to get position
+            ball.position.x += ball.velocity.x*frameRate*100;
+            ball.position.y += ball.velocity.y*frameRate*100;
+        
+            // Handle collisions
+        if (ball.position.y > height - ball.radius) { //BOTTOM
+            ball.velocity.y *= ball.restitution;
+            ball.position.y = height - ball.radius;
+        }
+        if (ball.position.y < ball.radius) {            //TOP
+            ball.velocity.y *= ball.restitution;
+            ball.position.y = ball.radius;
+        }
+        if (ball.position.x > width - ball.radius) {        //RIGHT
+            ball.velocity.x *= ball.restitution;
+            ball.position.x = width - ball.radius;
+        }
+        if (ball.position.x < ball.radius) {        //LEFT
+            console.log(ball.position.x);
+            ball.velocity.x *= ball.restitution;
+            ball.position.x = ball.radius;
+        }
+        
+        // Draw the ball
+        //ctx.clearRect(ball.position.x, ball.position.y,ball.radius,ball.radius);
+        //ctx.clearRect(imgW,0,width-imgW,height);
+        ctx.clearRect(0,0,width,height);
+        ctx.drawImage(img,x,y,imgW,imgH);
+        ctx.drawImage(img2,x2,y2,imgW,imgH);
+            
+        ctx.save();
+
+        ctx.translate(ball.position.x, ball.position.y);
+        ctx.beginPath();
+        ctx.arc(0, 0, ball.radius, 0, Math.PI*2, true);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.restore();
+        }
+        
+        setup();
 
 }
 //tempBall
@@ -125,7 +194,8 @@ ctx.arc(canvas.width/2, canvas.height/2,10,0,Math.PI*2);
 ctx.fill();
 */
 
-
+//Boundaries of the canvas
+    var leftBound=0, rightBound=canvas.width, upBound=0, downBound=canvas.height;
 
 </script>
 
