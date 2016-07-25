@@ -66,7 +66,7 @@ button.reset{
 Canvas not supported on this browser.
 </canvas>
 <br>
-<button id = "reset" type = "button">Reset Game</button>
+<button id = "reset" type = "button" disabled>Reset Game</button>
 </div>
 
 <script>
@@ -74,9 +74,9 @@ window.onload = function(){ // Game Functionality
 var canvas = document.getElementById("pingPong");
 var ctx = canvas.getContext("2d");
 
-var imgH = 200, imgW = 150; //Player1 character properties.
+var imgH = 140, imgW = 100; //Player1 character properties.
 var x = 0, y = canvas.height/2-imgH/2,  x2 = canvas.width-imgW, y2 = canvas.height/2-imgH/2; //Starting positions.
-var speed = 24; //Speed at which the paddles move.
+var speed = 50; //Speed at which the paddles move.
 
 var resetGame = document.getElementById("reset");
 
@@ -89,7 +89,14 @@ img2.src = "emilia.jpg";
 var keys = [];
 
 
-//reset.addEventListener("click", gameReset());
+reset.addEventListener("click", function(){
+	score1.innerHTML = 0;
+	score2.innerHTML = 0;
+	ball.velocity.x = 5;
+	ball.velocity.y = 5 ;
+	reset.disabled = true;
+	console.log("rst")
+});
 
 ctx.drawImage(img,x,y,imgW,imgH);
 ctx.drawImage(img2,x2,y,imgW,imgH);
@@ -154,21 +161,8 @@ ctx.drawImage(img2,x2,y,imgW,imgH);
 	  loopTimer = setInterval(loop,frameDelay);
 	}
 	
-    reset.addEventListener("click", function(){
-        score1.innerHTML = 0;
-	score2.innerHTML = 0;
-	ball.velocity.x = 5;
-	ball.velocity.y = 5 ;
-	reset.disabled = true;
-	console.log("rst");     
-    });
-	
 	var loop = function() {
 	
-		// Integrate to get velocity
-		//ball.velocity.x += ax*frameRate;
-		//ball.velocity.y += ay*frameRate;
-
 		// Integrate to get position
 		ball.position.x += ball.velocity.x*frameRate*100;
 		ball.position.y += ball.velocity.y*frameRate*100;
