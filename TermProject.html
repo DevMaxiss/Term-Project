@@ -154,17 +154,14 @@ ctx.drawImage(img2,x2,y,imgW,imgH);
 	  loopTimer = setInterval(loop,frameDelay);
 	}
 	
-	/*
-	function gameReset(){
-		score1.innerHTML = 0;
-		score2.innerHTML = 0;
-		ball.velocity.x = 5;
-		ball.velocity.y = 5 ;
-		reset.disabled = true;
-		console.log("rst");
-	}*/
-	
-	
+    reset.addEventListener("click", function(){
+        score1.innerHTML = 0;
+	score2.innerHTML = 0;
+	ball.velocity.x = 5;
+	ball.velocity.y = 5 ;
+	reset.disabled = true;
+	console.log("rst");     
+    });
 	
 	var loop = function() {
 	
