@@ -31,6 +31,14 @@ background-size:100%;
 
 }
 
+table,tr,td{
+border: 2px black solid;
+border-collapse: collapse;
+width: 500px;
+text-align: center;
+
+}
+
 button.reset{
 /*Possible button style*/
 }
@@ -47,176 +55,197 @@ button.reset{
 
 <hr>
 
+<div align = "center">
+<table bgcolor = "#FFFFFF";>
+<tr><td id = "playerOne">0</td> <td id = "playerTwo">0</td></tr>
+</table>
+</div>
+<br>
 <div class = "canvasContainer"> <!--Where the game will be located.-->
-
 <canvas id = "pingPong"class = "environment" width = 1000 height = 700>
 Canvas not supported on this browser.
 </canvas>
 <br>
-<button type = "button">Reset Game</button>
-<button type = "button">Reset Scores</button>
-
+<button id = "reset" type = "button">Reset Game</button>
 </div>
 
-
 <script>
-
+window.onload = function(){ // Game Functionality
 var canvas = document.getElementById("pingPong");
 var ctx = canvas.getContext("2d");
 
 var imgH = 200, imgW = 150; //Player1 character properties.
-var x = 0, y = canvas.height/2-imgH/2; //Starting positions.
-var x2 = canvas.width-imgW, y2 = canvas.height/2-imgH/2;
+var x = 0, y = canvas.height/2-imgH/2,  x2 = canvas.width-imgW, y2 = canvas.height/2-imgH/2; //Starting positions.
 var speed = 24; //Speed at which the paddles move.
 
-var img = document.createElement("img");
+var resetGame = document.getElementById("reset");
+
+var img = document.createElement("img"), score1 = document.getElementById("playerOne");
 img.src = "test1.jpg";
 
-var img2 = document.createElement("img");
+var img2 = document.createElement("img"), score2 = document.getElementById("playerTwo");
 img2.src = "emilia.jpg";
 
 var keys = [];
 
 
-window.onload = function(){
+//reset.addEventListener("click", gameReset());
+
 ctx.drawImage(img,x,y,imgW,imgH);
 ctx.drawImage(img2,x2,y,imgW,imgH);
-function moveSet(){
-	if (keys[87] && y >= 0) {//up
-		ctx.clearRect(x,y-speed,imgW,canvas.height);
-		y-=speed;
-		ctx.drawImage(img,x,y,imgW,imgH);
+
+	
+	/*------------------------------------------------Player Movement Code------------------------------------------------*/
+	function moveSet(){
+		if (keys[87] && y >= 0) {//up
+			ctx.clearRect(x,y-speed,imgW,canvas.height);
+			y-=speed;
+			ctx.drawImage(img,x,y,imgW,imgH);
+		}
+		if (keys[83] && y <= canvas.height-imgH) {//down
+			ctx.clearRect(x,y-speed,imgW,canvas.height);
+			y+=speed;
+			ctx.drawImage(img,x,y,imgW,imgH);
+		}
+		if (keys[38] && y2 >= 0) {//up
+			ctx.clearRect(x2,y2-speed,imgW,canvas.height);
+			y2-=speed;
+			ctx.drawImage(img2,x2,y2,imgW,imgH);
+		}
+		if (keys[40] && y2 <= canvas.height-imgH) { //down
+			ctx.clearRect(x2,y2-speed,imgW,canvas.height);
+			y2+=speed;
+			ctx.drawImage(img2,x2,y2,imgW,imgH);
+		}
 	}
-	if (keys[83] && y <= canvas.height-imgH) {//down
-		ctx.clearRect(x,y-speed,imgW,canvas.height);
-		y+=speed;
-		ctx.drawImage(img,x,y,imgW,imgH);
-	}
-	if (keys[38] && y2 >= 0) {//up
-		ctx.clearRect(x2,y2-speed,imgW,canvas.height);
-		y2-=speed;
-		ctx.drawImage(img2,x2,y2,imgW,imgH);
-	}
-	if (keys[40] && y2 <= canvas.height-imgH) { //down
-		ctx.clearRect(x2,y2-speed,imgW,canvas.height);
-		y2+=speed;
-		ctx.drawImage(img2,x2,y2,imgW,imgH);
-	}
-}
+	document.body.addEventListener("keydown", function(key){ //movement.
+		keys[key.keyCode] = true;
+		moveSet();
+	});
 
+	document.body.addEventListener("keyup", function(key){ //movement.
+		keys[key.keyCode] = false;	
+		moveSet();
+	});
 
-document.body.addEventListener("keydown", function(key){ //movement.
-	keys[key.keyCode] = true;
-	moveSet();
-});
-
-document.body.addEventListener("keyup", function(key){ //movement.
-	keys[key.keyCode] = false;	
-	moveSet();
-});
-    
-        var width = 1000;
-        var height = 700;
-        var canvas = ctx = false;
-        var frameRate = 1/40; // Seconds
-        var frameDelay = frameRate * 1000; // ms
-        var loopTimer = false;
-        
-        var ball = {
-            position: {x: width/2, y: height/2},
-            velocity: {x: 5, y: 0},
-            mass: 0, //kg
-            radius: 10, // 1px = 1cm
-            restitution: -1
-            };
-        var setup = function() {
-          canvas = document.getElementById("pingPong");
-          ctx = canvas.getContext("2d");
-          
-          ctx.fillstyle = "purple";
-          loopTimer = setInterval(loop,frameDelay);
-        }
-        
-        var loop = function() {
-            
-            // Integrate to get velocity
-            //ball.velocity.x += ax*frameRate;
-            //ball.velocity.y += ay*frameRate;
-
-            // Integrate to get position
-            ball.position.x += ball.velocity.x*frameRate*100;
-            ball.position.y += ball.velocity.y*frameRate*100;
-        
-            // Handle collisions
-        if (ball.position.y > height - ball.radius) { //BOTTOM
-            ball.velocity.y *= ball.restitution;
-            ball.position.y = height - ball.radius;
-        }
-        if (ball.position.y < ball.radius) {            //TOP
-            ball.velocity.y *= ball.restitution;
-            ball.position.y = ball.radius;
-        }
-
+	/*--------------------------------------------------------------------------------------------------------------------*/	
+	
+	
+/*------------------------------------------------Ball and Scoring Code------------------------------------------------*/
+	var width = 1000;
+	var height = 700;
+	var canvas = ctx = false;
+	var frameRate = 1/40; // Seconds
+	var frameDelay = frameRate * 1000; // ms
+	var loopTimer = false;
 		
+	var ball = {
+		position: {x: width/2, y: height/2},
+		velocity: {x: 5, y: 5},
+		mass: 0, //kg
+		radius: 10, // 1px = 1cm
+		restitution: -1
+	};
+	
+	var setup = function() {
+	  canvas = document.getElementById("pingPong");
+	  ctx = canvas.getContext("2d");
+	  ctx.fillstyle = "purple";
+	  loopTimer = setInterval(loop,frameDelay);
+	}
+	
+	/*
+	function gameReset(){
+		score1.innerHTML = 0;
+		score2.innerHTML = 0;
+		ball.velocity.x = 5;
+		ball.velocity.y = 5 ;
+		reset.disabled = true;
+		console.log("rst");
+	}*/
+	
+	
+	
+	var loop = function() {
+	
+		// Integrate to get velocity
+		//ball.velocity.x += ax*frameRate;
+		//ball.velocity.y += ay*frameRate;
+
+		// Integrate to get position
+		ball.position.x += ball.velocity.x*frameRate*100;
+		ball.position.y += ball.velocity.y*frameRate*100;
 		
-		if ((ball.position.x  > width-ball.radius) || (ball.position.x > width-imgW-ball.radius)&& (ball.position.y > y2 && ball.position.y < y2+imgH)) {//RIGHT-BOUNCE
+		// Handle collisions
+		if (ball.position.y > height - ball.radius) { //BOTTOM
+			ball.velocity.y *= ball.restitution;
+			ball.position.y = height - ball.radius;
+		}
+		if (ball.position.y < ball.radius) {            //TOP
+			ball.velocity.y *= ball.restitution;
+			ball.position.y = ball.radius;
+		}
+
+		if ((ball.position.x  > width-ball.radius) || (ball.position.x > width-imgW-ball.radius)&& (ball.position.y > y2 && ball.position.y < y2+imgH)) {//Right Paddle
 			ball.velocity.x *= ball.restitution;
-            if ((ball.position.x > width-imgW-ball.radius)&& (ball.position.y > y2 && ball.position.y < y2+imgH)) {
+			if ((ball.position.x > width-imgW-ball.radius)&& (ball.position.y > y2 && ball.position.y < y2+imgH)) {//RIGHT-BOUNCE
 				console.log("boing")
-                ball.position.x = width-imgW-ball.radius;
-            }
-            else {
-                ball.position.x = width-ball.radius;
-            }
-            	
-        }
+				ball.position.x = width-imgW-ball.radius;
+			}
+			else {// If ball hits the end wall, reset ball to centre and award point to scorer.
+			  ball.position.x = (canvas.width/2)-ball.radius;
+			  ball.position.y = (canvas.height/2)-ball.radius;
+			  score1.innerHTML++;
+				if(score1.innerHTML == "5"){
+					ball.velocity.x = 0;
+					ball.velocity.y = 0;
+					ball.position.x = (canvas.width/2)-ball.radius;
+					ball.position.y = (canvas.height/2)-ball.radius;
+					reset.disabled = false;
+				}
+			}
+		}
 		
+		if ((ball.position.x < ball.radius) || (ball.position.x < imgW+ball.radius)&& (ball.position.y > y && ball.position.y < y+imgH)) {//Left Paddle
+			ball.velocity.x *= ball.restitution;
+			if ((ball.position.x < imgW+ball.radius)&& (ball.position.y > y && ball.position.y < y+imgH)) {//LEFT-BOUNCE
+				ball.position.x = imgW+ball.radius;
+			}
+			else {// If ball hits the end wall, reset ball to centre and award point to scorer.
+				ball.position.x = (canvas.width/2)-ball.radius;
+				ball.position.y = (canvas.height/2)-ball.radius;
+				score2.innerHTML++;
+				if(score2.innerHTML == "5"){
+					ball.velocity.x = 0;
+					ball.velocity.y = 0;
+					ball.position.x = (canvas.width/2)-ball.radius;
+					ball.position.y = (canvas.height/2)-ball.radius;
+					reset.disabled = false;
+				}
+			}
+		}
 		
-        if ((ball.position.x < ball.radius) || (ball.position.x < imgW+ball.radius)&& (ball.position.y > y && ball.position.y < y+imgH)) {//LEFT-BOUNCE
-            ball.velocity.x *= ball.restitution;
-            if ((ball.position.x < imgW+ball.radius)&& (ball.position.y > y && ball.position.y < y+imgH)) {
-                ball.position.x = imgW+ball.radius;
-            }
-            else {
-                ball.position.x = ball.radius;
-            }
-            
-        }
-        
-        // Draw the ball
-        //ctx.clearRect(ball.position.x, ball.position.y,ball.radius,ball.radius);
-        //ctx.clearRect(imgW,0,width-imgW,height);
-        ctx.clearRect(0,0,width,height);
-        ctx.fillRect(x,y,imgW+1,imgH-1); //Player 1 Paddle
-        ctx.drawImage(img,x,y,imgW,imgH); // Player 1 Icon
-        ctx.fillRect(x2-1,y2,imgW-1,imgH-1); // Player 2 Paddle
-        ctx.drawImage(img2,x2,y2,imgW,imgH); //Player 2 Icon
-            
-        ctx.save();
-
-        ctx.translate(ball.position.x, ball.position.y);
-        ctx.beginPath();
-        ctx.arc(0, 0, ball.radius, 0, Math.PI*2, true);
-        ctx.fill();
-        ctx.closePath();
-
-        ctx.restore();
-        }
-        
-        setup();
-
+		ctx.clearRect(0,0,width,height);
+		ctx.fillRect(x,y,imgW+1,imgH-1); //Player 1 Paddle
+		ctx.drawImage(img,x,y,imgW,imgH); // Player 1 Icon
+		ctx.fillRect(x2-1,y2,imgW-1,imgH-1); // Player 2 Paddle
+		ctx.drawImage(img2,x2,y2,imgW,imgH); //Player 2 Icon
+		ctx.save();
+		
+		ctx.translate(ball.position.x, ball.position.y);
+		ctx.beginPath();
+		ctx.arc(0, 0, ball.radius, 0, Math.PI*2, true);
+		ctx.fill();
+		ctx.closePath();
+		ctx.restore();
+	}
+		setup();
+/*---------------------------------------------------------------------------------------------------------------------*/
 }
-//tempBall
-/*
-ctx.moveTo(canvas.width/2, canvas.height/2);
-ctx.fillStyle = "purple";
-ctx.arc(canvas.width/2, canvas.height/2,10,0,Math.PI*2);
-ctx.fill();
-*/
 
-//Boundaries of the canvas
-    var leftBound=0, rightBound=canvas.width, upBound=0, downBound=canvas.height;
-
+	
+	
+	
 </script>
 
 </body>
