@@ -61,7 +61,6 @@ Canvas not supported on this browser.
 </canvas>
 <br>
 <button id = "reset" type = "button">Re:Start Game</button>
-<button id = "pause" type = "button">Pause/Resume</button>
 </div>
 
 <script>
@@ -71,20 +70,17 @@ var ctx = canvas.getContext("2d");
 var imgH = 140, imgW = 100; //Player1 character properties.
 var x = 0, y = canvas.height/2-imgH/2,  x2 = canvas.width-imgW, y2 = canvas.height/2-imgH/2; //Starting positions.
 var speed = 50; //Speed at which the paddles move.
-var resetGame = document.getElementById("reset"), pauseButton = document.getElementById("pause");
+var resetGame = document.getElementById("reset");
 var img = document.createElement("img"), score1 = document.getElementById("playerOne");
 img.src = "test1.jpg";
 var img2 = document.createElement("img"), score2 = document.getElementById("playerTwo");
 img2.src = "maki.jpeg";
 var keys = [];
-var paused = false, gameStarted = false;
 reset.addEventListener("click", function(){
-	pauseButton.disabled = false;
 
 	if(reset.disabled == true){
 		ball.velocity.x = 5;
 		ball.velocity.y = 5 ;
-		gameStarted = true;
 		reset.disabled = true
 	}
 
@@ -94,54 +90,60 @@ reset.addEventListener("click", function(){
 		ball.velocity.x = 5;
 		ball.velocity.y = 5 ;
 		reset.disabled = true;
-		console.log("rst")
 	}
-});
-
-pauseButton.addEventListener("click", function(){
-	if(gameStarted == false){
-		pauseButton.disabled = true;
-	}	
-	else{
-		if(gameStarted == true && paused == false ){
-			ball.velocity.x = 0;
-			ball.velocity.y = 0;
-			paused = true;
-		}
-
-		else if(gameStarted == true && paused == true){
-			ball.velocity.x = 5;
-			ball.velocity.y = 5;
-			paused = false;
-		}
-	}
-	
 });
 
 
 ctx.drawImage(img,x,y,imgW,imgH);
-ctx.drawImage(img2,x2,y,imgW,imgH);
-	
+ctx.drawImage(img2,x2,y2,imgW,imgH);
+
+
+
+
+if(y2 > canvas.height){
+  y2= canvas.height-imgH;
+}
+
+
+
+
+
 	/*------------------------------------------------Player Movement Code------------------------------------------------*/
 	function moveSet(){
 		if (keys[87] && y >= 0) {//up
 			ctx.clearRect(x,y-speed,imgW,canvas.height);
 			y-=speed;
+			if(y < 0){
+				y = 0;
+			}
 			ctx.drawImage(img,x,y,imgW,imgH);
 		}
 		if (keys[83] && y <= canvas.height-imgH) {//down
 			ctx.clearRect(x,y-speed,imgW,canvas.height);
 			y+=speed;
+			if(y > canvas.height - imgH){
+				y = canvas.height-imgH;
+			}
 			ctx.drawImage(img,x,y,imgW,imgH);
+			console.log(y);
 		}
+
+
+
 		if (keys[38] && y2 >= 0) {//up
 			ctx.clearRect(x2,y2-speed,imgW,canvas.height);
 			y2-=speed;
+			if(y2 < 0){
+				y2 = 0;
+			}
 			ctx.drawImage(img2,x2,y2,imgW,imgH);
 		}
 		if (keys[40] && y2 <= canvas.height-imgH) { //down
 			ctx.clearRect(x2,y2-speed,imgW,canvas.height);
 			y2+=speed;
+			if(y2 > canvas.height - imgH){
+				y2 = canvas.height-imgH;
+			}
 			ctx.drawImage(img2,x2,y2,imgW,imgH);
 		}
 	}
@@ -209,7 +211,7 @@ ctx.drawImage(img2,x2,y,imgW,imgH);
 					ball.velocity.y = 0;
 					ball.position.x = (canvas.width/2);
 					ball.position.y = (canvas.height/2);
-					reset.disabled = false, pauseButton.disabled = true, gameStarted = false;
+					reset.disabled = false;
 					alert("Player One Wins!");
 				}
 			}
@@ -229,7 +231,7 @@ ctx.drawImage(img2,x2,y,imgW,imgH);
 					ball.velocity.y = 0;
 					ball.position.x = (canvas.width/2);
 					ball.position.y = (canvas.height/2);
-					reset.disabled = false, pauseButton.disabled = true, gameStarted = false;
+					reset.disabled = false;
 					alert("Player Two Wins!");
 
 				}
