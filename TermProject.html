@@ -72,7 +72,7 @@ var x = 0, y = canvas.height/2-imgH/2,  x2 = canvas.width-imgW, y2 = canvas.heig
 var speed = 50; //Speed at which the paddles move.
 var resetGame = document.getElementById("reset");
 var img = document.createElement("img"), score1 = document.getElementById("playerOne");
-img.src = "test1.jpg";
+img.src = "honoka.jpg";
 var img2 = document.createElement("img"), score2 = document.getElementById("playerTwo");
 img2.src = "maki.jpeg";
 var keys = [];
@@ -113,7 +113,7 @@ if(y2 > canvas.height){
 		if (keys[87] && y >= 0) {//up
 			ctx.clearRect(x,y-speed,imgW,canvas.height);
 			y-=speed;
-			if(y < 0){
+			if(y < 0){// Prevents image from going past the canvas
 				y = 0;
 			}
 			ctx.drawImage(img,x,y,imgW,imgH);
@@ -121,19 +121,16 @@ if(y2 > canvas.height){
 		if (keys[83] && y <= canvas.height-imgH) {//down
 			ctx.clearRect(x,y-speed,imgW,canvas.height);
 			y+=speed;
-			if(y > canvas.height - imgH){
+			if(y > canvas.height - imgH){ // Prevents image from going past the canvas
 				y = canvas.height-imgH;
 			}
 			ctx.drawImage(img,x,y,imgW,imgH);
-			console.log(y);
 		}
-
-
-
+		
 		if (keys[38] && y2 >= 0) {//up
 			ctx.clearRect(x2,y2-speed,imgW,canvas.height);
 			y2-=speed;
-			if(y2 < 0){
+			if(y2 < 0){// Prevents image from going past the canvas
 				y2 = 0;
 			}
 			ctx.drawImage(img2,x2,y2,imgW,imgH);
@@ -141,7 +138,7 @@ if(y2 > canvas.height){
 		if (keys[40] && y2 <= canvas.height-imgH) { //down
 			ctx.clearRect(x2,y2-speed,imgW,canvas.height);
 			y2+=speed;
-			if(y2 > canvas.height - imgH){
+			if(y2 > canvas.height - imgH){// Prevents image from going past the canvas
 				y2 = canvas.height-imgH;
 			}
 			ctx.drawImage(img2,x2,y2,imgW,imgH);
@@ -149,10 +146,18 @@ if(y2 > canvas.height){
 	}
 	document.body.addEventListener("keydown", function(key){ //movement.
 		keys[key.keyCode] = true;
+		switch(key.keyCode){
+			case 38:  case 40: key.preventDefault();  //Prevents arrow keys from scrolling 
+			default: break;
+		}
 		moveSet();
 	});
 	document.body.addEventListener("keyup", function(key){ //movement.
 		keys[key.keyCode] = false;	
+		switch(key.keyCode){
+			case 38:  case 40: key.preventDefault(); //Prevents arrow keys from scrolling 
+			default: break;
+		}
 		moveSet();
 	});
 	/*--------------------------------------------------------------------------------------------------------------------*/	
