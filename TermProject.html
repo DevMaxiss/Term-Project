@@ -12,33 +12,25 @@ background-image: url("LLBG2.jpg");
 background-repeat: no-repeat;
 background-size: 100%;
 }
-
 canvas.environment{
 border: 3px black solid;
 background-color: #ffffff;  
 }
-
 div.canvasContainer{
 text-align: center;
 }
-
 div.header{
 text-align: center;
 border:5px #000000 solid;
 background-color:#ffffff; /*Different Colour? Maybe an image for banner?*/
 background-size:100%;
-
-
 }
-
 table,tr,td{
 border: 2px black solid;
 border-collapse: collapse;
 width: 500px;
 text-align: center;
-
 }
-
 button.reset{
 /*Possible button style*/
 }
@@ -54,7 +46,9 @@ button.reset{
 </div>
 
 <hr>
-
+<audio autoplay loop>
+<source src = "SunnyDaySong.ogg" type = "audio/ogg">
+</audio>
 <div align = "center">
 <table bgcolor = "#FFFFFF";>
 <tr><td id = "playerOne">0</td> <td id = "playerTwo">0</td></tr>
@@ -66,41 +60,67 @@ button.reset{
 Canvas not supported on this browser.
 </canvas>
 <br>
-<button id = "reset" type = "button" disabled>Reset Game</button>
+<button id = "reset" type = "button">Re:Start Game</button>
+<button id = "pause" type = "button">Pause/Resume</button>
 </div>
 
 <script>
 window.onload = function(){ // Game Functionality
 var canvas = document.getElementById("pingPong");
 var ctx = canvas.getContext("2d");
-
 var imgH = 140, imgW = 100; //Player1 character properties.
 var x = 0, y = canvas.height/2-imgH/2,  x2 = canvas.width-imgW, y2 = canvas.height/2-imgH/2; //Starting positions.
 var speed = 50; //Speed at which the paddles move.
-
-var resetGame = document.getElementById("reset");
-
+var resetGame = document.getElementById("reset"), pauseButton = document.getElementById("pause");
 var img = document.createElement("img"), score1 = document.getElementById("playerOne");
 img.src = "test1.jpg";
-
 var img2 = document.createElement("img"), score2 = document.getElementById("playerTwo");
 img2.src = "maki.jpeg";
-
 var keys = [];
-
-
+var paused = false, gameStarted = false;
 reset.addEventListener("click", function(){
-	score1.innerHTML = 0;
-	score2.innerHTML = 0;
-	ball.velocity.x = 5;
-	ball.velocity.y = 5 ;
-	reset.disabled = true;
-	console.log("rst")
+	pauseButton.disabled = false;
+
+	if(reset.disabled == true){
+		ball.velocity.x = 5;
+		ball.velocity.y = 5 ;
+		gameStarted = true;
+		reset.disabled = true
+	}
+
+	else{
+		score1.innerHTML = 0;
+		score2.innerHTML = 0;
+		ball.velocity.x = 5;
+		ball.velocity.y = 5 ;
+		reset.disabled = true;
+		console.log("rst")
+	}
 });
+
+pauseButton.addEventListener("click", function(){
+	if(gameStarted == false){
+		pauseButton.disabled = true;
+	}	
+	else{
+		if(gameStarted == true && paused == false ){
+			ball.velocity.x = 0;
+			ball.velocity.y = 0;
+			paused = true;
+		}
+
+		else if(gameStarted == true && paused == true){
+			ball.velocity.x = 5;
+			ball.velocity.y = 5;
+			paused = false;
+		}
+	}
+	
+});
+
 
 ctx.drawImage(img,x,y,imgW,imgH);
 ctx.drawImage(img2,x2,y,imgW,imgH);
-
 	
 	/*------------------------------------------------Player Movement Code------------------------------------------------*/
 	function moveSet(){
@@ -129,16 +149,14 @@ ctx.drawImage(img2,x2,y,imgW,imgH);
 		keys[key.keyCode] = true;
 		moveSet();
 	});
-
 	document.body.addEventListener("keyup", function(key){ //movement.
 		keys[key.keyCode] = false;	
 		moveSet();
 	});
-
 	/*--------------------------------------------------------------------------------------------------------------------*/	
 	
 	
-/*------------------------------------------------Ball and Scoring Code------------------------------------------------*/
+	/*------------------------------------------------Ball and Scoring Code------------------------------------------------*/
 	var width = 1000;
 	var height = 700;
 	var canvas = ctx = false;
@@ -148,7 +166,7 @@ ctx.drawImage(img2,x2,y,imgW,imgH);
 		
 	var ball = {
 		position: {x: width/2, y: height/2},
-		velocity: {x: 5, y: 5},
+		velocity: {x: 0, y: 0},
 		mass: 0, //kg
 		radius: 10, // 1px = 1cm
 		restitution: -1
@@ -176,7 +194,6 @@ ctx.drawImage(img2,x2,y,imgW,imgH);
 			ball.velocity.y *= ball.restitution;
 			ball.position.y = ball.radius;
 		}
-
 		if ((ball.position.x  > width-ball.radius) || (ball.position.x > width-imgW-ball.radius)&& (ball.position.y > y2 && ball.position.y < y2+imgH)) {//Right Paddle
 			ball.velocity.x *= ball.restitution;
 			if ((ball.position.x > width-imgW-ball.radius)&& (ball.position.y > y2 && ball.position.y < y2+imgH)) {//RIGHT-BOUNCE
@@ -184,15 +201,16 @@ ctx.drawImage(img2,x2,y,imgW,imgH);
 				ball.position.x = width-imgW-ball.radius;
 			}
 			else {// If ball hits the end wall, reset ball to centre and award point to scorer.
-			  ball.position.x = (canvas.width/2)-ball.radius;
-			  ball.position.y = (canvas.height/2)-ball.radius;
+			  ball.position.x = (canvas.width/2);
+			  ball.position.y = (canvas.height/2);
 			  score1.innerHTML++;
 				if(score1.innerHTML == "5"){
 					ball.velocity.x = 0;
 					ball.velocity.y = 0;
-					ball.position.x = (canvas.width/2)-ball.radius;
-					ball.position.y = (canvas.height/2)-ball.radius;
-					reset.disabled = false;
+					ball.position.x = (canvas.width/2);
+					ball.position.y = (canvas.height/2);
+					reset.disabled = false, pauseButton.disabled = true, gameStarted = false;
+					alert("Player One Wins!");
 				}
 			}
 		}
@@ -203,15 +221,17 @@ ctx.drawImage(img2,x2,y,imgW,imgH);
 				ball.position.x = imgW+ball.radius;
 			}
 			else {// If ball hits the end wall, reset ball to centre and award point to scorer.
-				ball.position.x = (canvas.width/2)-ball.radius;
-				ball.position.y = (canvas.height/2)-ball.radius;
+				ball.position.x = (canvas.width/2);
+				ball.position.y = (canvas.height/2);
 				score2.innerHTML++;
 				if(score2.innerHTML == "5"){
 					ball.velocity.x = 0;
 					ball.velocity.y = 0;
-					ball.position.x = (canvas.width/2)-ball.radius;
-					ball.position.y = (canvas.height/2)-ball.radius;
-					reset.disabled = false;
+					ball.position.x = (canvas.width/2);
+					ball.position.y = (canvas.height/2);
+					reset.disabled = false, pauseButton.disabled = true, gameStarted = false;
+					alert("Player Two Wins!");
+
 				}
 			}
 		}
@@ -221,6 +241,12 @@ ctx.drawImage(img2,x2,y,imgW,imgH);
 		ctx.drawImage(img,x,y,imgW,imgH); // Player 1 Icon
 		ctx.fillRect(x2-1,y2,imgW-1,imgH-1); // Player 2 Paddle
 		ctx.drawImage(img2,x2,y2,imgW,imgH); //Player 2 Icon
+		
+		ctx.beginPath();
+		ctx.moveTo(canvas.width/2,0);
+		ctx.lineTo(canvas.width/2, canvas.height);
+		ctx.closePath();
+		ctx.stroke();
 		ctx.save();
 		
 		ctx.translate(ball.position.x, ball.position.y);
@@ -231,9 +257,8 @@ ctx.drawImage(img2,x2,y,imgW,imgH);
 		ctx.restore();
 	}
 		setup();
-/*---------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------------------------------*/
 }
-
 	
 	
 	
