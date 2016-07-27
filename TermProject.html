@@ -31,9 +31,6 @@ border-collapse: collapse;
 width: 500px;
 text-align: center;
 }
-button.reset{
-/*Possible button style*/
-}
 </style>
 
 
@@ -46,9 +43,6 @@ button.reset{
 </div>
 
 <hr>
-<audio autoplay loop>
-<source src = "SunnyDaySong.ogg" type = "audio/ogg">
-</audio>
 <div align = "center">
 <table bgcolor = "#FFFFFF";>
 <tr><td id = "playerOne">0</td> <td id = "playerTwo">0</td></tr>
@@ -79,8 +73,8 @@ var keys = [];
 reset.addEventListener("click", function(){
 
 	if(reset.disabled == true){
-		ball.velocity.x = 5;
-		ball.velocity.y = 5 ;
+		ball.velocity.x = 0;
+		ball.velocity.y = 0;
 		reset.disabled = true
 	}
 
@@ -88,7 +82,7 @@ reset.addEventListener("click", function(){
 		score1.innerHTML = 0;
 		score2.innerHTML = 0;
 		ball.velocity.x = 5;
-		ball.velocity.y = 5 ;
+		ball.velocity.y = 5;
 		reset.disabled = true;
 	}
 });
@@ -96,17 +90,6 @@ reset.addEventListener("click", function(){
 
 ctx.drawImage(img,x,y,imgW,imgH);
 ctx.drawImage(img2,x2,y2,imgW,imgH);
-
-
-
-
-if(y2 > canvas.height){
-  y2= canvas.height-imgH;
-}
-
-
-
-
 
 	/*------------------------------------------------Player Movement Code------------------------------------------------*/
 	function moveSet(){
